@@ -1,0 +1,31 @@
+{
+	"Table": {
+		"TableName": "greetings",
+		"KeySchema": [
+			{
+				"AttributeName": "id",
+				"KeyType": "HASH"
+			}
+		],
+		"AttributeDefinitions": [
+			{
+				"AttributeName": "id",
+				"AttributeType": "S"
+			}
+		],
+		"ProvisionedThroughput": {
+			"ReadCapacityUnits": 1,
+			"WriteCapacityUnits": 1
+		}
+	},
+	"Seeds": [
+		{
+			"id": "c796d733-9779-45c5-a130-20fd1fd0b652",
+      "task": "Go Serverless v1.0! Your function executed successfully!"
+		},
+    {
+			"id": "43fca9c6-91f4-4593-9e5c-fac85beab5a7",
+			"task": "Go Serverless v1.0! Did you check Serverless Offline Plugin?"
+		}
+	]
+}

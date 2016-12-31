@@ -1,15 +1,14 @@
 'use strict';
 
-var AWS       = require('aws-sdk');
-var dynamodb  = new AWS.DynamoDB();
+const dynamodb = require('./config/dynamodb')();
 
-var params = {
+const params = {
   "TableName": 'greetings'
 };
 
 module.exports.hello = (event, context, callback) => {
 
-  dynamodb.scan(params, function(err, data) {
+  dynamodb.scan(params, (err, data) => {
     if (err) {
       console.error(err, err.stack);
       callback(err);
