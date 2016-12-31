@@ -17,11 +17,6 @@ service: greeting
 # Check out our docs for more details
 # frameworkVersion: "=X.X.X"
 
-package:
-  exclude:
-    - node_modules/dynamodb-localhost/**
-    - node_modules/serverless-dynamodb-local/**
-
 provider:
   name: aws
   runtime: nodejs4.3
@@ -111,8 +106,9 @@ resources:
 #       Value: "Some output value"
 
 plugins:
-  - serverless-dynamodb-local
+  - serverless-plugin-optimize
   - serverless-offline
+  - serverless-dynamodb-local
 
 custom:
   dynamodb:
@@ -122,3 +118,8 @@ custom:
       migration: true
     migration:
       dir: offline/migrations
+  optimize:
+    includePaths: ['config']
+
+package:
+  individually: true
