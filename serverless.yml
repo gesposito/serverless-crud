@@ -11,7 +11,7 @@
 #
 # Happy Coding!
 
-service: aws-nodejs # NOTE: update this with your service name
+service: greeting
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
@@ -21,9 +21,9 @@ provider:
   name: aws
   runtime: nodejs4.3
 
-# you can overwrite defaults here
-#  stage: dev
-#  region: us-east-1
+  # you can overwrite defaults here
+  #  stage: dev
+  region: us-west-2
 
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
