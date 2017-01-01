@@ -11,12 +11,13 @@ module.exports.hello = (event, context, callback) => {
   dynamodb.scan(params, (err, data) => {
     if (err) {
       console.error(err, err.stack);
-      callback(err);
+      
+      callback(new Error(`[500] ${err}`));
     } else {
       const response = {
         "statusCode": 200,
         "body": JSON.stringify({
-          "messages": data,
+          "messages": data.Items,
         }),
       };
 
