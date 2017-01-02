@@ -3,8 +3,8 @@
 const dynamodb = require('../config/dynamodb')();
 
 module.exports.put = (event, context, callback) => {
-  const id    = event.pathParameters.id;
-  const data  = JSON.parse(event.body);
+  const { id }  = event.pathParameters;
+  const data    = JSON.parse(event.body);
 
   const params = {
     "TableName" : 'greetings',
