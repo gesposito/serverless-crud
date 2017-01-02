@@ -120,7 +120,7 @@ resources:
       Type: AWS::DynamoDB::Table
       DeletionPolicy: Retain
       Properties:
-        TableName: 'greetings'
+        TableName: ${file(./greetings/config.js):tableName}
         AttributeDefinitions:
         - AttributeName: id
           AttributeType: S

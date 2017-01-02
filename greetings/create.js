@@ -2,12 +2,14 @@
 
 const dynamodb = require('../config/dynamodb')();
 
+const tableName = require('./config').tableName();
+
 module.exports.create = (event, context, callback) => {
   const uuid = require('uuid/v4')();
   const data = JSON.parse(event.body);
 
   const params = {
-    "TableName" : 'greetings',
+    "TableName" : tableName,
     "Item": {
       "id"      : uuid,
       "message" : data.message,

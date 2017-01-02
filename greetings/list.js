@@ -2,8 +2,10 @@
 
 const dynamodb = require('../config/dynamodb')();
 
+const tableName = require('./config').tableName();
+
 const params = {
-  "TableName": 'greetings'
+  "TableName": tableName
 };
 
 module.exports.list = (event, context, callback) => {

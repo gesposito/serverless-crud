@@ -2,11 +2,13 @@
 
 const dynamodb = require('../config/dynamodb')();
 
+const tableName = require('./config').tableName();
+
 module.exports.get = (event, context, callback) => {
   const { id }  = event.pathParameters;
 
   const params = {
-    "TableName" : 'greetings',
+    "TableName" : tableName,
     "Key": {
       "id"      : id,
     },
