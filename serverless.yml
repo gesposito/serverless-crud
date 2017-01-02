@@ -30,6 +30,10 @@ provider:
     - Effect: Allow
       Action:
         - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
       Resource: "arn:aws:dynamodb:us-west-2:*:*"
 
 #    - Effect: "Allow"
@@ -59,26 +63,55 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
-  hello:
-    handler: handler.hello
-
-  #    The following are a few example events you can configure
-  #    NOTE: Please make sure to change your handler code to work with those events
-  #    Check the event documentation for details
+  list:
+    handler: greetings/list.list
     memorySize: 128
     events:
       - http:
-          path: hello
+          path: greetings
           method: get
+  #    The following are a few example events you can configure
+  #    NOTE: Please make sure to change your handler code to work with those events
+  #    Check the event documentation for details
+
   #      - s3: ${env:BUCKET}
   #      - schedule: rate(10 minutes)
   #      - sns: greeter-topic
   #      - stream: arn:aws:dynamodb:region:XXXXXX:table/foo/stream/1970-01-01T00:00:00.000
   #      - alexaSkill
 
-#    Define function environment variables here
-#    environment:
-#      variable2: value2
+  #    Define function environment variables here
+  #    environment:
+  #      variable2: value2
+
+  create:
+    handler: greetings/create.create
+    memorySize: 128
+    events:
+      - http:
+          path: greetings
+          method: post
+  read:
+    handler: greetings/get.get
+    memorySize: 128
+    events:
+      - http:
+          path: greetings/{id}
+          method: get
+  update:
+    handler: greetings/put.put
+    memorySize: 128
+    events:
+      - http:
+          path: greetings/{id}
+          method: put
+  delete:
+    handler: greetings/delete.delete
+    memorySize: 128
+    events:
+      - http:
+          path: greetings/{id}
+          method: delete
 
 # you can add CloudFormation resource templates here
 resources:
