@@ -70,6 +70,7 @@ functions:
       - http:
           path: greetings
           method: get
+          cors: true
   #    The following are a few example events you can configure
   #    NOTE: Please make sure to change your handler code to work with those events
   #    Check the event documentation for details
@@ -91,6 +92,7 @@ functions:
       - http:
           path: greetings
           method: post
+          cors: true
   read:
     handler: greetings/get.get
     memorySize: 128
@@ -98,6 +100,7 @@ functions:
       - http:
           path: greetings/{id}
           method: get
+          cors: true
   update:
     handler: greetings/put.put
     memorySize: 128
@@ -105,6 +108,7 @@ functions:
       - http:
           path: greetings/{id}
           method: put
+          cors: true
   delete:
     handler: greetings/delete.delete
     memorySize: 128
@@ -112,6 +116,7 @@ functions:
       - http:
           path: greetings/{id}
           method: delete
+          cors: true
 
 # you can add CloudFormation resource templates here
 resources:

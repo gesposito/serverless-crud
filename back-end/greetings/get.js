@@ -8,9 +8,9 @@ module.exports.get = (event, context, callback) => {
   const { id }  = event.pathParameters;
 
   const params = {
-    "TableName" : tableName,
-    "Key": {
-      "id"      : id,
+    'TableName' : tableName,
+    'Key': {
+      'id'      : id,
     },
   };
 
@@ -21,8 +21,11 @@ module.exports.get = (event, context, callback) => {
       callback(new Error(`[500] ${err}`));
     } else {
       const response = {
-        "statusCode": 200,
-        "body"      : JSON.stringify(result.Item),
+        'headers': {
+          'Access-Control-Allow-Origin' : '*'
+        },
+        'statusCode': 200,
+        'body'      : JSON.stringify(result.Item),
       };
 
       callback(null, response);

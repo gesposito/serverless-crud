@@ -5,7 +5,7 @@ const dynamodb = require('../config/dynamodb')();
 const tableName = require('./config').tableName();
 
 const params = {
-  "TableName": tableName
+  'TableName': tableName
 };
 
 module.exports.list = (event, context, callback) => {
@@ -17,8 +17,11 @@ module.exports.list = (event, context, callback) => {
       callback(new Error(`[500] ${err}`));
     } else {
       const response = {
-        "statusCode": 200,
-        "body"      : JSON.stringify(result.Items),
+        'headers': {
+          'Access-Control-Allow-Origin' : '*'
+        },
+        'statusCode': 200,
+        'body'      : JSON.stringify(result.Items),
       };
 
       callback(null, response);

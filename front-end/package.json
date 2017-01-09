@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+  },
+  "devDependencies": {
+    "serverless-plugin-optimize": "^1.0.0-rc.14",
+    "serverless-single-page-app-plugin": "file:./serverless-plugins/single-page-app"
+  }
+}

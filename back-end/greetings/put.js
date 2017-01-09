@@ -4,15 +4,15 @@ const dynamodb = require('../config/dynamodb')();
 
 const tableName = require('./config').tableName();
 
-module.exports.create = (event, context, callback) => {
-  const uuid = require('uuid/v4')();
-  const data = JSON.parse(event.body);
+module.exports.put = (event, context, callback) => {
+  const { id }  = event.pathParameters;
+  const data    = JSON.parse(event.body);
 
   const params = {
-    "TableName" : tableName,
-    "Item": {
-      "id"      : uuid,
-      "message" : data.message,
+    'TableName' : tableName,
+    'Item': {
+      'id'      : id,
+      'message' : data.message,
     },
   };
 
@@ -23,8 +23,11 @@ module.exports.create = (event, context, callback) => {
       callback(new Error(`[500] ${err}`));
     } else {
       const response = {
-        "statusCode": 200,
-        "body"      : JSON.stringify(result),
+        'headers': {
+          'Access-Control-Allow-Origin' : '*'
+        },
+        'statusCode': 200,
+        'body'      : JSON.stringify(result),
       };
 
       callback(null, response);
