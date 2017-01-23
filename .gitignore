@@ -8,3 +8,5 @@ jspm_packages/
 # App
 *.log
 dist/
+
+config/
