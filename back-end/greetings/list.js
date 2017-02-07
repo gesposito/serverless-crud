@@ -18,7 +18,7 @@ module.exports.list = (event, context, callback) => {
     } else {
       const response = {
         'headers': {
-          'Access-Control-Allow-Origin' : '*'
+          'Access-Control-Allow-Origin' : '*',
         },
         'statusCode': 200,
         'body'      : JSON.stringify(result.Items),

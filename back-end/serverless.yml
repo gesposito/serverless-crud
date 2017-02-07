@@ -86,13 +86,20 @@ functions:
   #      variable2: value2
 
   create:
-    handler: greetings/create.create
+    handler: greetings/post.post
     memorySize: 128
     events:
       - http:
           path: greetings
           method: post
           cors: true
+          integration: lambda
+          authorizer:
+            arn: ${file(./config/authorizer.js):arn}
+            resultTtlInSeconds: 0
+            identitySource: method.request.header.Authorization
+            identityValidationExpression: .*
+
   read:
     handler: greetings/get.get
     memorySize: 128
@@ -101,6 +108,7 @@ functions:
           path: greetings/{id}
           method: get
           cors: true
+
   update:
     handler: greetings/put.put
     memorySize: 128
@@ -109,6 +117,13 @@ functions:
           path: greetings/{id}
           method: put
           cors: true
+          integration: lambda
+          authorizer:
+            arn: ${file(./config/authorizer.js):arn}
+            resultTtlInSeconds: 0
+            identitySource: method.request.header.Authorization
+            identityValidationExpression: .*
+
   delete:
     handler: greetings/delete.delete
     memorySize: 128
@@ -117,6 +132,13 @@ functions:
           path: greetings/{id}
           method: delete
           cors: true
+          integration: lambda
+          authorizer:
+            arn: ${file(./config/authorizer.js):arn}
+            resultTtlInSeconds: 0
+            identitySource: method.request.header.Authorization
+            identityValidationExpression: .*
+
 
 # you can add CloudFormation resource templates here
 resources:

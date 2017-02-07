@@ -4,7 +4,7 @@ const dynamodb = require('../config/dynamodb')();
 
 const tableName = require('./config').tableName();
 
-module.exports.get = (event, context, callback) => {
+module.exports.read = (event, context, callback) => {
   const { id }  = event.pathParameters;
 
   const params = {
@@ -22,7 +22,7 @@ module.exports.get = (event, context, callback) => {
     } else {
       const response = {
         'headers': {
-          'Access-Control-Allow-Origin' : '*'
+          'Access-Control-Allow-Origin' : '*',
         },
         'statusCode': 200,
         'body'      : JSON.stringify(result.Item),

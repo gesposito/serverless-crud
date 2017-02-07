@@ -10,3 +10,5 @@ jspm_packages/
 dist/
 
 config/
+
+env.yml

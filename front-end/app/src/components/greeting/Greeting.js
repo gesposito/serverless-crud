@@ -3,11 +3,16 @@ import React from 'react';
 const inputStyle = { 'width': 360 };
 
 const Greeting = React.createClass({
+  contextTypes: {
+    'user': React.PropTypes.string.isRequired,
+  },
+
   getInitialState() {
     const { greeting } = this.props;
 
     return {
-      'message': greeting.message,
+      'author'  : greeting.user,
+      'message' : greeting.message,
     };
   },
 
@@ -41,17 +46,22 @@ const Greeting = React.createClass({
   },
 
   render() {
-    const { message } = this.state;
+    const { user } = this.context;
+    const { message, author } = this.state;
     const { greeting } = this.props;
     const { onCreate, onChange, onUpdate, onDelete } = this;
 
     const isNew = !greeting.id;
+    const isLogged = !!user;
+    const isAuthor = user && (user === author);
+    const isEditable = isLogged && isAuthor;
 
     return (
       <div>
         <input
           type="text"
           value={message}
+          disabled={isNew ? !isLogged : !isEditable}
           placeholder={isNew ? "Create new message" : greeting.message}
           style={inputStyle}
           onChange={onChange}
@@ -59,14 +69,14 @@ const Greeting = React.createClass({
         {(() => {
           if (isNew) {
             return (
-              <button onClick={onCreate}>Add</button>
+              <button disabled={!isLogged} onClick={onCreate}>Add</button>
             );
           }
 
           return (
             <span>
-              <button onClick={onUpdate}>Save</button>
-              <button onClick={onDelete}>Delete</button>
+              <button disabled={!isEditable} onClick={onUpdate}>Save</button>
+              <button disabled={!isEditable} onClick={onDelete}>Delete</button>
             </span>
           );
         })()}

@@ -1,93 +1,70 @@
 import './App.css';
 
+// import 'whatwg-fetch';
+
 import React from 'react';
 import { connect, PromiseState } from 'react-refetch';
 
-import Greeting from './components/greeting/Greeting';
+import GreetingsView from './components/greeting/GreetingsView';
 
 const App = React.createClass({
-  onCreate(greeting) {
-    this.props.greetingsCreate(greeting);
+  childContextTypes: {
+    'user': React.PropTypes.string,
   },
 
-  onUpdate(greeting) {
-    this.props.greetingsPut(greeting);
+  getInitialState() {
+    return {
+      'user': localStorage.getItem('user_id'),
+    }
   },
 
-  onDelete(greeting) {
-    this.props.greetingsDelete(greeting);
+  getChildContext() {
+    const { user } = this.state;
+
+    return {
+      user,
+    };
+  },
+
+  onLogout() {
+    localStorage.clear();
+    window.location.href = window.location.href;
   },
 
   render() {
-    const { greetingsFetch } = this.props;
-    const { onCreate, onUpdate, onDelete } = this;
+    const { user } = this.state;
+    const { onLogout } = this;
 
-    if (greetingsFetch.pending) {
-      return (
-        <div>
-          loading
-        </div>
-      );
-    } else if (greetingsFetch.rejected) {
-      return (
-        <div>
-          error
-        </div>
-      );
-    }
+    const isLogged = !!user;
 
-    // greetingsFetch.fulfilled
-    const greetings = greetingsFetch.value;
     return (
       <div>
-        {greetings.map((greeting) => {
+        {(() => {
+          if (isLogged) {
+            return (
+              <div>
+                Logged as {user.substring(0,9)}
+                <button onClick={onLogout}>
+                  Logout
+                </button>
+              </div>
+            );
+          }
           return (
-            <Greeting key={greeting.id} greeting={greeting} onUpdate={onUpdate} onDelete={onDelete} />
+            <div>
+              <button onClick={() => {
+                const provider = 'facebook';
+                window.location.href = `${AUTH}/authentication/signin/${provider}`;
+              }}>
+                Facebook
+              </button>
+            </div>
           );
-        })}
-
-        <Greeting greeting={{ 'message': '' }} onCreate={onCreate} />
+        })()}
+        <GreetingsView isLogged={isLogged} />
       </div>
     );
   }
 });
 
-export default connect(props => {
-  const refresh = {
-    'greetingsFetch': {
-      'url'       : `${API}/greetings`,
-      'force'     : true,
-      'refreshing': true,
-    }
-  };
-
-  return {
-    'greetingsFetch': {
-      'url'       : `${API}/greetings`,
-    },
-    'greetingsCreate': greeting => ({
-      'greetingCreateResponse': {
-        'url'     : `${API}/greetings`,
-        'method'  : 'POST',
-        'body'    : JSON.stringify(greeting),
-        'andThen' : () => (refresh)
-      }
-    }),
-    'greetingsPut': greeting => ({
-      'greetingPutResponse': {
-        'url'     : `${API}/greetings/${greeting.id}`,
-        'method'  : 'PUT',
-        'body'    : JSON.stringify(greeting),
-        'andThen' : () => (refresh)
-      }
-    }),
-    'greetingsDelete': greeting => ({
-      'greetingDeleteResponse': {
-        'url'     : `${API}/greetings/${greeting.id}`,
-        'method'  : 'DELETE',
-        'andThen' : () => (refresh)
-      }
-    }),
-
-  };
-})(App)
+export default App;

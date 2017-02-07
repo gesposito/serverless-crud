@@ -1,0 +1,110 @@
+# https://github.com/laardee/serverless-authentication-boilerplate
+frameworkVersion: ">=1.2.0 <2.0.0"
+
+service: serverless-authentication # change this
+
+provider:
+  name: aws
+  runtime: nodejs4.3
+  region: us-west-2
+
+  environment: ${file(./env.yml):${opt:stage, self:provider.stage}}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+      - dynamodb:Scan
+      - dynamodb:Query
+      - dynamodb:PutItem
+      - dynamodb:DeleteItem
+      Resource: arn:aws:dynamodb:${self:provider.region}:*:*
+    - Effect: Allow
+      Action:
+      - cognito-sync:*
+      - cognito-identity:*
+      Resource: arn:aws:cognito-identity:*:*:*
+    - Effect: Allow
+      Action:
+      - cognito-idp:*
+      Resource: arn:aws:cognito-idp:*:*:*
+
+package:
+  exclude:
+    - .git/**
+
+# Functions
+
+functions:
+  signin:
+    handler: handler.signin
+    memorySize: 256
+    timeout: 15
+    events:
+      - http:
+          path: authentication/signin/{provider}
+          method: get
+          integration: lambda-proxy
+  callback:
+    handler: handler.callback
+    memorySize: 256
+    timeout: 15
+    events:
+      - http:
+          path: authentication/callback/{provider}
+          method: get
+          integration: lambda-proxy
+  refresh:
+    handler: handler.refresh
+    memorySize: 256
+    timeout: 15
+    events:
+      - http:
+          path: authentication/refresh/{refresh_token}
+          method: get
+          cors: true
+          integration: lambda
+          request:
+            template:
+              application/json: |
+                {
+                  "refresh_token":"$input.params('refresh_token')",
+                  "id":"$input.params('id')",
+                  "state":"$input.params('state')",
+                  "host":"$input.params().header.get('host')",
+                  "stage":"$context.stage"
+                }
+  authorize:
+    handler: handler.authorize
+
+resources:
+  Description: ${self:provider.environment.SERVICE} [${self:provider.environment.STAGE}] template
+  Resources:
+    CacheTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+        - AttributeName: token
+          AttributeType: S
+        - AttributeName: type
+          AttributeType: S
+        KeySchema:
+        - AttributeName: token
+          KeyType: HASH
+        - AttributeName: type
+          KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.CACHE_DB_NAME}
+#    UsersTable:
+#      Type: AWS::DynamoDB::Table
+#      Properties:
+#        AttributeDefinitions:
+#        - AttributeName: userId
+#          AttributeType: S
+#        KeySchema:
+#        - AttributeName: userId
+#          KeyType: HASH
+#        ProvisionedThroughput:
+#          ReadCapacityUnits: 1
+#          WriteCapacityUnits: 1
+#        TableName: ${self:provider.environment.USERS_DB_NAME}

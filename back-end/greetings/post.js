@@ -4,15 +4,16 @@ const dynamodb = require('../config/dynamodb')();
 
 const tableName = require('./config').tableName();
 
-module.exports.create = (event, context, callback) => {
+module.exports.post = (event, context, callback) => {
   const uuid = require('uuid/v4')();
-  const data = JSON.parse(event.body);
+  const data = typeof event.body === 'string' ? JSON.parse(event.body) : event.body;
 
   const params = {
     'TableName' : tableName,
     'Item': {
       'id'      : uuid,
       'message' : data.message,
+      'user'    : event.principalId,
     },
   };
 
@@ -24,7 +25,7 @@ module.exports.create = (event, context, callback) => {
     } else {
       const response = {
         'headers': {
-          'Access-Control-Allow-Origin' : '*'
+          'Access-Control-Allow-Origin' : '*',
         },
         'statusCode': 200,
         'body'      : JSON.stringify(result),

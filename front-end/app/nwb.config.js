@@ -4,7 +4,8 @@ module.exports = {
   'type': 'react-app',
   'webpack': {
     'define': {
-      'API': JSON.stringify(config.apiGateway())
+      'API' : JSON.stringify(config.apiGateway()),
+      'AUTH': JSON.stringify(config.apiAuthentication())
     }
   }
 }
