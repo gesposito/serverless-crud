@@ -1,7 +1,7 @@
 # https://github.com/laardee/serverless-authentication-boilerplate
 frameworkVersion: ">=1.2.0 <2.0.0"
 
-service: serverless-authentication # change this
+service: serverless-rds-authentication # change this
 
 provider:
   name: aws

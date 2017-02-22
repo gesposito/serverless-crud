@@ -1,35 +1,32 @@
 'use strict';
 
-const dynamodb = require('../config/dynamodb')();
-
-const tableName = require('./config').tableName();
+const models = require('./models');
 
 module.exports.read = (event, context, callback) => {
+  context.callbackWaitsForEmptyEventLoop = false;
+
   const { id }  = event.pathParameters;
 
-  const params = {
-    'TableName' : tableName,
-    'Key': {
-      'id'      : id,
-    },
-  };
-
-  dynamodb.get(params, (err, result) => {
-    if (err) {
-      console.error(err, err.stack);
-
-      callback(new Error(`[500] ${err}`));
-    } else {
-      const response = {
-        'headers': {
-          'Access-Control-Allow-Origin' : '*',
-        },
-        'statusCode': 200,
-        'body'      : JSON.stringify(result.Item),
-      };
-
-      callback(null, response);
+  models.Greeting.findOne({
+    'where': {
+      'id': id,
     }
+  })
+  .then((data) => {
+    const response = {
+      'headers': {
+        'Access-Control-Allow-Origin' : '*',
+      },
+      'statusCode': 200,
+      'body'      : JSON.stringify(data),
+    };
+
+    callback(null, response);
+  })
+  .catch((err) => {
+    console.error(err, err.stack);
+
+    callback(new Error(`[500] ${err}`));
   });
 
 };

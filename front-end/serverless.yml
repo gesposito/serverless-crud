@@ -1,8 +1,10 @@
 # https://github.com/serverless/examples/tree/master/aws-node-single-page-app-via-cloudfront
 
-service: greeting-app
+service: greeting-rds-app
 
 frameworkVersion: ">=1.5.0 <2.0.0"
+
+region: us-west-2
 
 package:
   exclude:

@@ -2,23 +2,14 @@
 
 const models = require('./models');
 
-module.exports.list = (event, context, callback) => {
+module.exports.sync = (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false;
 
-  models.Greeting.findAll({
-  })
-  .then((data) => {
-    const response = {
-      'headers': {
-        'Access-Control-Allow-Origin' : '*',
-      },
-      'statusCode': 200,
-      'body'      : JSON.stringify(data),
-    };
+  models.sequelize.sync().then(() => {
+    console.info('DB is synced');
 
-    callback(null, response);
-  })
-  .catch((err) => {
+    callback(null, {});
+  }).catch((err) => {
     console.error(err, err.stack);
 
     callback(new Error(`[500] ${err}`));
